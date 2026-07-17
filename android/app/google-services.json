@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "243362929550",
+    "project_id": "mduck-lives",
+    "storage_bucket": "mduck-lives.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:243362929550:android:8329e0101cf32a8fca62df",
+        "android_client_info": {
+          "package_name": "com.mduckagency.mduck_lives"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBk1nomqFWcyAaY3MBchf6nJJLjrecE7sY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

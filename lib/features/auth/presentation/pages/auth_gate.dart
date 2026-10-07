@@ -7,8 +7,21 @@ import "../../../max_intro/presentation/pages/max_intro_page.dart";
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
 
+  bool _isSupabaseReady() {
+    try {
+      Supabase.instance.client;
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (!_isSupabaseReady()) {
+      return const LoginPage();
+    }
+
     final authRepository = AuthRepository();
     return StreamBuilder<AuthState>(
       stream: authRepository.authStateChanges,
@@ -22,3 +35,4 @@ class AuthGate extends StatelessWidget {
     );
   }
 }
+

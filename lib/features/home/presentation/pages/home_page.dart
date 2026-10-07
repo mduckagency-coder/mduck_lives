@@ -1,7 +1,9 @@
 import "package:flutter/material.dart";
+import "package:mduck_lives/core/media/media_cache.dart";
 import "package:video_player/video_player.dart";
 import "../../data/streamer_repository.dart";
 import "../widgets/stat_card.dart";
+import "../../../missoes/missoes_page.dart";
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,7 +16,6 @@ class _HomePageState extends State<HomePage> {
   final _repository = StreamerRepository();
   late Future<StreamerSummary> _summaryFuture;
   late VideoPlayerController _videoController;
-  int _bottomIndex = 3;
 
   static const _brandPurple = Color(0xFF7A0BD4);
   static const _milestones = [10000, 20000, 40000, 80000, 150000, 250000, 350000, 500000, 800000, 1000000];
@@ -40,6 +41,10 @@ class _HomePageState extends State<HomePage> {
   void dispose() {
     _videoController.dispose();
     super.dispose();
+  }
+
+  void _openMissoes() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MissoesPage()));
   }
 
   @override
@@ -74,7 +79,7 @@ class _HomePageState extends State<HomePage> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Image.asset("assets/videos/LogoMduck.png", height: 64, fit: BoxFit.contain),
+                      Image.asset("assets/videos/LogoMduck.png", height: 80, fit: BoxFit.contain),
                       const Spacer(),
                       const Icon(Icons.notifications_none, color: Colors.white, size: 26),
                     ],
@@ -119,7 +124,7 @@ class _HomePageState extends State<HomePage> {
                                     radius: 24,
                                     backgroundColor: Colors.white24,
                                     backgroundImage: summary.avatarUrl != null
-                                        ? NetworkImage(summary.avatarUrl!)
+                                        ? MediaCacheImage(summary.avatarUrl!)
                                         : null,
                                     child: summary.avatarUrl == null
                                         ? const Icon(Icons.person, color: Colors.white, size: 26)
@@ -338,10 +343,7 @@ class _HomePageState extends State<HomePage> {
                     },
                   ),
                 ),
-                _BottomNav(
-                  currentIndex: _bottomIndex,
-                  onTap: (i) => setState(() => _bottomIndex = i),
-                ),
+                _BottomNav(onMissoesTap: _openMissoes),
               ],
             ),
           ),
@@ -352,10 +354,9 @@ class _HomePageState extends State<HomePage> {
 }
 
 class _BottomNav extends StatelessWidget {
-  final int currentIndex;
-  final ValueChanged<int> onTap;
+  final VoidCallback onMissoesTap;
 
-  const _BottomNav({required this.currentIndex, required this.onTap});
+  const _BottomNav({required this.onMissoesTap});
 
   static const _brandPurple = Color(0xFF7A0BD4);
 
@@ -381,23 +382,17 @@ class _BottomNav extends StatelessWidget {
         children: [
           for (int i = 0; i < _items.length; i++)
             GestureDetector(
-              onTap: () => onTap(i),
+              onTap: () {
+                if (_items[i].$2 == "Missoes") {
+                  onMissoesTap();
+                }
+              },
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    _items[i].$1,
-                    color: currentIndex == i ? _brandPurple : Colors.white60,
-                    size: 22,
-                  ),
+                  Icon(_items[i].$1, color: Colors.white60, size: 22),
                   const SizedBox(height: 2),
-                  Text(
-                    _items[i].$2,
-                    style: TextStyle(
-                      color: currentIndex == i ? _brandPurple : Colors.white60,
-                      fontSize: 9,
-                    ),
-                  ),
+                  Text(_items[i].$2, style: const TextStyle(color: Colors.white60, fontSize: 9)),
                 ],
               ),
             ),
@@ -424,5 +419,3 @@ class _BottomNav extends StatelessWidget {
     );
   }
 }
-
-
